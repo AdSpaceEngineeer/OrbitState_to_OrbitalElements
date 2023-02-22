@@ -1,0 +1,113 @@
+#import packages
+import numpy as np
+import math
+
+#given conditions
+mu = 1.32712440042e11
+au = 1.495978707e8
+day = 24*3600
+
+#define functions to calculate the orbital elements
+def func_a(r_scal, v_scal):
+    return 1/(2/r_scal - v_scal**2/mu)
+
+def func_e_vec(r_scal, v_scal):
+    R = (v_scal**2)/mu - 1/r_scal
+    #print(R)
+    V = (1/mu)*np.dot(r_vec, v_vec)
+    #print(V)
+    return R*r_vec - V*v_vec
+
+def func_h_vec(r_vec, v_vec):
+    return np.cross(r_vec, v_vec)
+
+def func_n_vec(h_vec):
+    return np.cross(np.array([0,0,1]) , h_vec)
+
+def func_angle_i(h_vec):
+    #hz_vec = np.dot(h_vec, np.array([0,0,1]))
+    #hz_scal = np.sqrt(sum(n**2 for n in hz_vec))
+    h_scal = np.sqrt(sum(n**2 for n in h_vec))
+    return (math.acos(h_vec[2]/h_scal))*180/math.pi
+
+def func_long_om(n_vec):
+    #ny_vec = np.dot(n_vec, np.array([0,1,0]))
+    #ny = np.sqrt(sum(n**2 for n in ny_vec))
+    if n_vec[1]>=0:
+        return (math.acos(n_vec[0]/np.sqrt(sum(n**2 for n in n_vec))))
+    else:
+        return (2*math.pi - math.acos(n_vec[0]/np.sqrt(sum(n**2 for n in n_vec))))
+    
+def func_attid_om (n_vec, e_vec):
+    n_scal = np.sqrt(sum(n**2 for n in n_vec))
+    if e_vec[2]>=0:
+        return (math.acos(np.dot(n_vec, e_vec) / (n_scal*e)))
+    else:
+        return (2*math.pi - math.acos(np.dot(n_vec, e_vec) / (n_scal*e)))
+
+def func_true_f(e_vec, r_vec, v_vec):
+    v_rad = np.dot(r_vec, v_vec)/r_scal
+    if v_rad >= 0:
+        return (math.acos(np.dot(e_vec, r_vec)/(e*r_scal)))
+    else:
+        return (2*math.pi - math.acos(np.dot(e_vec, r_vec)/(e*r_scal)))
+
+#Example of Oumuamua Orbital State to Orbital ELements
+state_target_oum = [3.515868886595499e-2*au, -3.162046390773074*au, 4.493983111703389*au, -2.317577766980901e-3*au/day, 9.843360903693031e-3*au/day, -1.541856855538041e-2*au/day]
+states_orbit = state_target_oum
+r_vec = np.array(states_orbit[0:3])
+#print(r_vec)
+v_vec = np.array(states_orbit[3:6])
+#print(v_vec)
+r_scal = np.sqrt(sum(n**2 for n in r_vec))
+#print(r_scal)
+v_scal = np.sqrt(sum(n**2 for n in v_vec))
+#print(v_scal)
+a = func_a(r_scal, v_scal)
+e_vec = func_e_vec(r_scal, v_scal)
+e = np.sqrt(sum(n**2 for n in e_vec))
+h_vec = func_h_vec(r_vec, v_vec)
+h = np.sqrt(sum(n**2 for n in h_vec))
+n_vec = func_n_vec(h_vec)
+n = np.sqrt(sum(m**2 for m in n_vec))
+i = func_angle_i(h_vec)
+om = func_long_om(n_vec)
+w = func_attid_om(n_vec, e_vec)
+f = func_true_f(e_vec, r_vec, v_vec)
+print("Orbital Elements of Oumuamua")
+print("Semi-major axis = ", a)
+print("Eccentricity = ", e)
+print("Specific Angular Momentum = ", h)
+print("Angle of Inclination = ", i)
+print("Longitude of Ascending Node = ", om)
+print("True Anomaly = ", f)
+
+#Example of Borisov Orbital State to Orbital ELements
+state_target_bor = [7.249472033259724*au, 14.61063037906177*au, 14.24274452216359*au, -8.241709369476881e-3*au/day, -1.156219024581502e-2*au/day, -1s.317135977481448e-2*au/day]
+states_orbit = state_target_bor
+r_vec = np.array(states_orbit[0:3])
+#print(r_vec)
+v_vec = np.array(states_orbit[3:6])
+#print(v_vec)
+r_scal = np.sqrt(sum(n**2 for n in r_vec))
+#print(r_scal)
+v_scal = np.sqrt(sum(n**2 for n in v_vec))
+#print(v_scal)
+a = func_a(r_scal, v_scal)
+e_vec = func_e_vec(r_scal, v_scal)
+e = np.sqrt(sum(n**2 for n in e_vec))
+h_vec = func_h_vec(r_vec, v_vec)
+h = np.sqrt(sum(n**2 for n in h_vec))
+n_vec = func_n_vec(h_vec)
+n = np.sqrt(sum(m**2 for m in n_vec))
+i = func_angle_i(h_vec)
+om = func_long_om(n_vec)
+w = func_attid_om(n_vec, e_vec)
+f = func_true_f(e_vec, r_vec, v_vec)
+print("Orbital Elements of Borisov")
+print("Semi-major axis = ", a)
+print("Eccentricity = ", e)
+print("Specific Angular Momentum = ", h)
+print("Angle of Inclination = ", i)
+print("Longitude of Ascending Node = ", om)
+print("True Anomaly = ", f)
