@@ -83,7 +83,7 @@ print("Longitude of Ascending Node = ", om)
 print("True Anomaly = ", f)
 
 #Example of Borisov Orbital State to Orbital ELements
-state_target_bor = [7.249472033259724*au, 14.61063037906177*au, 14.24274452216359*au, -8.241709369476881e-3*au/day, -1.156219024581502e-2*au/day, -1s.317135977481448e-2*au/day]
+state_target_bor = [7.249472033259724*au, 14.61063037906177*au, 14.24274452216359*au, -8.241709369476881e-3*au/day, -1.156219024581502e-2*au/day, -1.317135977481448e-2*au/day]
 states_orbit = state_target_bor
 r_vec = np.array(states_orbit[0:3])
 #print(r_vec)
